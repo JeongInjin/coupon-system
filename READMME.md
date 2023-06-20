@@ -30,6 +30,12 @@ create database coupon_example;
 use coupon_example;
 ```
 
+redis 설치
+```kotlin
+docker pull redis
+docker run --name myredis -d -p 6379:6379 redis
+```
+
 요구사항 정의
 ```kotlin
 선착순 100명에게 할인쿠폰을 제공하는 이벤트를 진행하고자 한다.
