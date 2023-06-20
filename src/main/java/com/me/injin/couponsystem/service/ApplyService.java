@@ -1,6 +1,6 @@
 package com.me.injin.couponsystem.service;
 
-import com.me.injin.couponsystem.domain.Coupon;
+import com.me.injin.couponsystem.producer.CouponCreateProducer;
 import com.me.injin.couponsystem.reopsitory.CouponCountRepository;
 import com.me.injin.couponsystem.reopsitory.CouponRepository;
 import org.springframework.stereotype.Service;
@@ -12,9 +12,12 @@ public class ApplyService {
 
     private final CouponCountRepository couponCountRepository;
 
-    public ApplyService(CouponRepository couponRepository, CouponCountRepository couponCountRepository) {
+    private final CouponCreateProducer couponCreateProducer;
+
+    public ApplyService(CouponRepository couponRepository, CouponCountRepository couponCountRepository, CouponCreateProducer couponCreateProducer) {
         this.couponRepository = couponRepository;
         this.couponCountRepository = couponCountRepository;
+        this.couponCreateProducer = couponCreateProducer;
     }
 
     public void apply(Long userId) {
@@ -24,6 +27,6 @@ public class ApplyService {
             return;
         }
 
-        couponRepository.save(new Coupon(userId));
+        couponCreateProducer.create(userId);
     }
 }

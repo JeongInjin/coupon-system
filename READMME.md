@@ -34,7 +34,82 @@ redis 설치
 ```kotlin
 docker pull redis
 docker run --name myredis -d -p 6379:6379 redis
+
+docker exec -it f5af56809d01 redis-cli
+flushall
 ```
+
+kafka 설치
+```kotlin
+docker-compose 가 먼저 설치되어 잇어야 함
+docker-compose -v
+
+docker-compose 를 만들 폴더로 이동
+mkdir kafka 폴더 생성 후 
+vim docker-compose.yml 후에 아래와 같이 복사
+
+version: '2'
+services:
+zookeeper:
+image: wurstmeister/zookeeper
+container_name: zookeeper
+ports:
+- "2181:2181"
+kafka:
+image: wurstmeister/kafka:2.12-2.5.0
+container_name: kafka
+ports:
+- "9092:9092"
+environment:
+KAFKA_ADVERTISED_HOST_NAME: 127.0.0.1
+KAFKA_ZOOKEEPER_CONNECT: zookeeper:2181
+volumes:
+- /var/run/docker.sock:/var/run/docker.sock
+```
+카프카 실행
+```kotlin
+docker-compose up -d
+```
+
+카프카 실행 종료
+```kotlin
+docker-compose down
+```
+
+토픽생성
+```yaml
+docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic testTopic
+```
+
+프로듀서 실행
+```yaml
+docker exec -it kafka kafka-console-producer.sh --topic testTopic --broker-list 0.0.0.0:9092
+```
+
+컨슈머 실행
+```yaml
+docker exec -it kafka kafka-console-consumer.sh --topic testTopic --bootstrap-server localhost:9092
+```
+
+application 을 위한 토픽생성
+```yaml
+docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic coupon_create
+```
+
+토픽실행
+```yaml
+docker exec -it kafka kafka-console-consumer.sh --topic coupon_create --bootstrap-server localhost:9092
+```
+
+
+application 을 위한 컨슈머 실행
+```yaml
+docker exec -it kafka kafka-console-consumer.sh --topic coupon_create --bootstrap-server localhost:9092 --key-deserializer "org.apache.kafka.common.serialization.StringDeserializer" --value-deserializer "org.apache.kafka.common.serialization.LongDeserializer"
+```
+
+
+---
+
 
 요구사항 정의
 ```kotlin
