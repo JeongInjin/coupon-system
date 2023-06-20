@@ -76,17 +76,17 @@ docker-compose up -d
 docker-compose down
 ```
 
-토픽생성
+테스트 토픽생성
 ```yaml
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic testTopic
 ```
 
-프로듀서 실행
+테스트 프로듀서 실행
 ```yaml
 docker exec -it kafka kafka-console-producer.sh --topic testTopic --broker-list 0.0.0.0:9092
 ```
 
-컨슈머 실행
+테스트 컨슈머 실행
 ```yaml
 docker exec -it kafka kafka-console-consumer.sh --topic testTopic --bootstrap-server localhost:9092
 ```
@@ -96,13 +96,8 @@ application 을 위한 토픽생성
 docker exec -it kafka kafka-topics.sh --bootstrap-server localhost:9092 --create --topic coupon_create
 ```
 
-토픽실행
-```yaml
-docker exec -it kafka kafka-console-consumer.sh --topic coupon_create --bootstrap-server localhost:9092
-```
-
-
-application 을 위한 컨슈머 실행
+application 을 위한 컨슈머 실행   
+cli 환경에서 보고싶으면 아래 명령어를, 또는 consumer 모듈의 application을 실행
 ```yaml
 docker exec -it kafka kafka-console-consumer.sh --topic coupon_create --bootstrap-server localhost:9092 --key-deserializer "org.apache.kafka.common.serialization.StringDeserializer" --value-deserializer "org.apache.kafka.common.serialization.LongDeserializer"
 ```
